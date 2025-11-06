@@ -355,6 +355,19 @@ export function EnhancedBankDeposits() {
     const pnl = parseFloat(transactionForm.pnl) || 0;
     const remainingBalance = parseFloat(transactionForm.remainingBalance) || calculateRemaining(transactionForm.bankId, transactionForm.date, deposit, withdraw);
 
+    // Determine who is submitting this entry
+    let submittedBy = user?.id || '';
+    let submittedByName = user?.name || '';
+    
+    // If admin is creating on behalf of another staff member
+    if (isAdmin() && transactionForm.selectedStaff && transactionForm.selectedStaff !== user?.id) {
+      const selectedStaffMember = staff.find(s => s.id === transactionForm.selectedStaff);
+      if (selectedStaffMember) {
+        submittedBy = selectedStaffMember.id;
+        submittedByName = selectedStaffMember.name;
+      }
+    }
+
     const transactionData = {
       date: transactionForm.date,
       bankId: transactionForm.bankId,
@@ -364,6 +377,8 @@ export function EnhancedBankDeposits() {
       remaining: remainingBalance,
       remainingBalance: remainingBalance,
       amount: deposit, // For compatibility
+      submittedBy: submittedBy,
+      submittedByName: submittedByName,
     };
 
     try {

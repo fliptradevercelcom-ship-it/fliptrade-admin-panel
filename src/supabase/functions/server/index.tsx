@@ -661,11 +661,29 @@ app.post('/make-server-63060bc2/deposits', async (c) => {
     const depositData = await c.req.json();
     const depositId = `${Date.now()}_${user.id}`;
     
+    // Check if admin is submitting on behalf of another staff member
+    let submittedBy = user.id;
+    let submittedByName = staffData.name;
+    
+    // If submittedBy and submittedByName are provided in the request, use them (for "on behalf of" functionality)
+    if (depositData.submittedBy && depositData.submittedByName) {
+      // Verify that the current user is an admin
+      const isAdmin = staffData.role === 'Admin' || staffData.role === 'Super Admin';
+      if (isAdmin) {
+        // Verify that the submittedBy ID exists in staff
+        const targetStaffData = await kv.get(`staff:${depositData.submittedBy}`);
+        if (targetStaffData) {
+          submittedBy = depositData.submittedBy;
+          submittedByName = depositData.submittedByName;
+        }
+      }
+    }
+    
     const deposit = {
       ...depositData,
       id: depositId,
-      submittedBy: user.id,
-      submittedByName: staffData.name,
+      submittedBy: submittedBy,
+      submittedByName: submittedByName,
       createdAt: new Date().toISOString(),
     };
 
@@ -712,12 +730,27 @@ app.put('/make-server-63060bc2/deposits/:id', async (c) => {
 
   try {
     const updateData = await c.req.json();
+    
+    // Determine submittedBy and submittedByName
+    let submittedBy = existingDeposit.submittedBy;
+    let submittedByName = existingDeposit.submittedByName;
+    
+    // If admin is updating and wants to change who submitted it (on behalf of)
+    if (updateData.submittedBy && updateData.submittedByName && isAdmin) {
+      // Verify that the submittedBy ID exists in staff
+      const targetStaffData = await kv.get(`staff:${updateData.submittedBy}`);
+      if (targetStaffData) {
+        submittedBy = updateData.submittedBy;
+        submittedByName = updateData.submittedByName;
+      }
+    }
+    
     const updatedDeposit = {
       ...existingDeposit,
       ...updateData,
       id: depositId,
-      submittedBy: existingDeposit.submittedBy,
-      submittedByName: existingDeposit.submittedByName,
+      submittedBy: submittedBy,
+      submittedByName: submittedByName,
       updatedAt: new Date().toISOString(),
     };
 
@@ -911,11 +944,29 @@ app.post('/make-server-63060bc2/bank-deposits', async (c) => {
     const bankDepositData = await c.req.json();
     const bankDepositId = `${Date.now()}_${user.id}`;
     
+    // Check if admin is submitting on behalf of another staff member
+    let submittedBy = user.id;
+    let submittedByName = staffData.name;
+    
+    // If submittedBy and submittedByName are provided in the request, use them (for "on behalf of" functionality)
+    if (bankDepositData.submittedBy && bankDepositData.submittedByName) {
+      // Verify that the current user is an admin
+      const isAdmin = staffData.role === 'Admin' || staffData.role === 'Super Admin';
+      if (isAdmin) {
+        // Verify that the submittedBy ID exists in staff
+        const targetStaffData = await kv.get(`staff:${bankDepositData.submittedBy}`);
+        if (targetStaffData) {
+          submittedBy = bankDepositData.submittedBy;
+          submittedByName = bankDepositData.submittedByName;
+        }
+      }
+    }
+    
     const bankDeposit = {
       ...bankDepositData,
       id: bankDepositId,
-      submittedBy: user.id,
-      submittedByName: staffData.name,
+      submittedBy: submittedBy,
+      submittedByName: submittedByName,
       createdAt: new Date().toISOString(),
     };
 
@@ -962,12 +1013,27 @@ app.put('/make-server-63060bc2/bank-deposits/:id', async (c) => {
 
   try {
     const updateData = await c.req.json();
+    
+    // Determine submittedBy and submittedByName
+    let submittedBy = existingBankDeposit.submittedBy;
+    let submittedByName = existingBankDeposit.submittedByName;
+    
+    // If admin is updating and wants to change who submitted it (on behalf of)
+    if (updateData.submittedBy && updateData.submittedByName && isAdmin) {
+      // Verify that the submittedBy ID exists in staff
+      const targetStaffData = await kv.get(`staff:${updateData.submittedBy}`);
+      if (targetStaffData) {
+        submittedBy = updateData.submittedBy;
+        submittedByName = updateData.submittedByName;
+      }
+    }
+    
     const updatedBankDeposit = {
       ...existingBankDeposit,
       ...updateData,
       id: bankDepositId,
-      submittedBy: existingBankDeposit.submittedBy,
-      submittedByName: existingBankDeposit.submittedByName,
+      submittedBy: submittedBy,
+      submittedByName: submittedByName,
       updatedAt: new Date().toISOString(),
     };
 

@@ -294,6 +294,8 @@ export function EnhancedDepositsNew() {
       cashWithdraw: parseFloat(formData.cashWithdraw) || 0,
       clientIncentives: validClientIncentives,
       expenses: validExpenses,
+      submittedBy: submittedBy,
+      submittedByName: submittedByName,
     };
 
     setIsSubmittingDeposit(true);
