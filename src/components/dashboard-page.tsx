@@ -148,14 +148,6 @@ export function DashboardPage() {
 
   const stats = [
     {
-      title: 'Total Withdrawals',
-      value: formatCurrency(metrics.totalWithdrawals),
-      change: counts.withdrawalsCount > 0 ? `${counts.withdrawalsCount} transactions` : 'No withdrawals',
-      changeType: 'negative',
-      icon: ArrowDownCircle,
-      description: 'All withdrawal transactions',
-    },
-    {
       title: 'Total Deposits',
       value: formatCurrency(metrics.totalDeposits),
       change: counts.depositsCount > 0 ? `${counts.depositsCount} entries` : 'No data',
@@ -164,12 +156,12 @@ export function DashboardPage() {
       description: 'Local + USDT + Cash Deposits',
     },
     {
-      title: 'Total Company Expenses',
-      value: formatCurrency(metrics.totalCompanyExpenses),
-      change: metrics.totalCompanyExpenses > 0 ? `${formatCurrency(metrics.totalCompanyExpenses)} spent` : 'No expenses',
+      title: 'Total Withdrawals',
+      value: formatCurrency(metrics.totalWithdrawals),
+      change: counts.withdrawalsCount > 0 ? `${counts.withdrawalsCount} transactions` : 'No withdrawals',
       changeType: 'negative',
-      icon: Receipt,
-      description: 'All company operational expenses',
+      icon: ArrowDownCircle,
+      description: 'All withdrawal transactions',
     },
     {
       title: 'Total Balance',
@@ -178,6 +170,14 @@ export function DashboardPage() {
       changeType: metrics.totalBalance > 0 ? 'positive' : 'neutral',
       icon: Wallet,
       description: 'All Deposits - All Withdrawals',
+    },
+    {
+      title: 'Total Company Expenses',
+      value: formatCurrency(metrics.totalCompanyExpenses),
+      change: metrics.totalCompanyExpenses > 0 ? `${formatCurrency(metrics.totalCompanyExpenses)} spent` : 'No expenses',
+      changeType: 'negative',
+      icon: Receipt,
+      description: 'All company operational expenses',
     },
     {
       title: 'Total Client Incentives',
